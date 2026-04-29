@@ -10,13 +10,18 @@ namespace LabUtils.Utils.InfiniteAmmoUtil
     public class AmmoUtility : Utility
     {
         public static Page Page;
-        public static AmmoInventory Inventory;
         public static MelonPreferences_Entry<bool> UnlimitedAmmo { get; set; } = Core.Preferences.CreateEntry<bool>("UnlimitedAmmo", false);
+        public static MelonPreferences_Entry<bool> UnlimitedMagazines { get; set; } = Core.Preferences.CreateEntry<bool>("UnlimitedMagazines", false);
+        public static MelonPreferences_Entry<bool> UnlimitedShells { get; set; } = Core.Preferences.CreateEntry<bool>("UnlimitedShells", false);
+        public static MelonPreferences_Entry<bool> GripMagazineRefill { get; set; } = Core.Preferences.CreateEntry<bool>("GripMagazineRefill", false);
         protected override void OnLoad()
         {
-            string name = Random.Range(0, 100) > 90 ? "AmmoLab" : "Ammo Utils";
+            string name = Random.Range(0, 100) > 90 ? "AmmoLab" : "Ammo Utility";
             Page = UICore.UtilitiesPage.CreatePage(name, OverrideColor.red);
             Page.CreateBool("Unlimited Ammo", Color.white, UnlimitedAmmo.Value, (a) => UnlimitedAmmo.Value = a);
+            Page.CreateBool("Unlimited Magazines", Color.white, UnlimitedMagazines.Value, (a) => UnlimitedMagazines.Value = a);
+            Page.CreateBool("Unlimited Shells/Slugs/Cartridges", Color.white, UnlimitedShells.Value, (a) => UnlimitedShells.Value = a);
+            Page.CreateBool("Grip Magazine Refill", Color.white, GripMagazineRefill.Value, (a) => GripMagazineRefill.Value = a);
         }
     }
 }

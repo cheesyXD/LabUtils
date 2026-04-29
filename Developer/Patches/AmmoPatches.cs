@@ -5,44 +5,65 @@ using LabUtils.Utils.InfiniteAmmoUtil;
 
 namespace LabUtils.Developer.Patches
 {
+    [HarmonyPatch()]
     public static class AmmoPatches
     {
-        public static string[] groups = new string[3] {
-            "light", "medium", "heavy"     
+        public static string[] groups =  {
+            "light", "medium", "heavy"
         };
-        [HarmonyPatch(typeof(AmmoInventory), "Awake")]
+        [HarmonyPatch(typeof(AmmoInventory), nameof(AmmoInventory.Awake))]
         [HarmonyPostfix]
-        public static void AwakePostfix(AmmoInventory _instance)
+        public static void AwakePostfix()
         {
-            AmmoUtility.Inventory = _instance;
-            foreach (var group in groups) {
-                if (_instance.GetCartridgeCount(group) < 1) {
-                    _instance.AddCartridge(_instance.lightAmmoGroup, 2000);
-                    _instance.AddCartridge(_instance.mediumAmmoGroup, 2000);
-                    _instance.AddCartridge(_instance.heavyAmmoGroup, 2000);
+            foreach (var group in groups)
+            {
+                if (AmmoInventory.Instance.GetCartridgeCount(group) < 1)
+                {
+                    AmmoInventory.Instance.AddCartridge(AmmoInventory.Instance.lightAmmoGroup, 2000);
+                    AmmoInventory.Instance.AddCartridge(AmmoInventory.Instance.mediumAmmoGroup, 2000);
+                    AmmoInventory.Instance.AddCartridge(AmmoInventory.Instance.heavyAmmoGroup, 2000);
                 }
             }
         }
 
-        [HarmonyPatch(typeof(AmmoInventory), "RemoveCartridge")]
-        [HarmonyPostfix]
-        public static void RemoveCartridgePostfix(AmmoInventory __instance, CartridgeData cartridge, int count)
+        [HarmonyPatch(typeof(AmmoInventory), nameof(AmmoInventory.RemoveCartridge))]
+        [HarmonyPrefix]
+        public static bool RemoveCartridgePrefix(CartridgeData cartridge, int count)
         {
-            if (!AmmoUtility.UnlimitedAmmo.Value) return;
+            return !AmmoUtility.UnlimitedAmmo.Value;
+        }
 
-            var group = __instance.GetGroupByCartridge(cartridge);
-
-            switch (group)
+        [HarmonyPatch(typeof(Gun), nameof(Gun.OnFire))]
+        [HarmonyPrefix]
+        public static void OnFirePrefix(Gun __instance)
+        {
+            if (AmmoUtility.UnlimitedMagazines.Value)
             {
-                case "light":
-                    __instance.AddCartridge(__instance.lightAmmoGroup, count);
-                    break;
-                case "medium":
-                    __instance.AddCartridge(__instance.mediumAmmoGroup, count);
-                    break;
-                case "heavy":
-                    __instance.AddCartridge(__instance.heavyAmmoGroup, count);
-                    break;
+                __instance?.gameObject?.GetComponentInChildren<Magazine>()?.magazineState?.Refill();
+            }
+        }
+
+        [HarmonyPatch(typeof(Gun), nameof(Gun.AmmoCount))]
+        [HarmonyPrefix]
+        public static bool ShotgunCreditCardPrefix(Gun __instance, ref int __result) // DO NOT CHANGE __instance OR __result TO ANYTHING ELSE
+        {
+            if (AmmoUtility.UnlimitedShells.Value)
+            {
+                __result = 1;
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        [HarmonyPatch(typeof(Magazine), nameof(Magazine.OnGrab))]
+        [HarmonyPrefix]
+        public static void OnGrabPrefix(Magazine __instance, Hand hand)
+        {
+            if (AmmoUtility.GripMagazineRefill.Value)
+            {
+                __instance.magazineState.Refill();
             }
         }
     }

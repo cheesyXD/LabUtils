@@ -72,11 +72,13 @@ namespace LabUtils.Utils.AssetWarehouseUtil
             });
             SelectedPage.CreateFunction("Unlock Crate", OverrideColor.red, () =>
             {
-                GachaCapsule.u.IncrementUnlockForBarcode(new Barcode(rep.barcode));
+                DataManager.ActiveSave.Unlocks.IncrementUnlockForBarcode(new Barcode(rep.barcode));
+                DataManager.TrySaveActiveSave(Il2CppSLZ.Marrow.SaveData.SaveFlags.DefaultAndPlayerSettingsAndUnlocks);
             });
             SelectedPage.CreateFunction("Lock Crate", OverrideColor.red, () =>
             {
-                GachaCapsule.u.ClearUnlockForBarcode(new Barcode(rep.barcode));
+                DataManager.ActiveSave.Unlocks.ClearUnlockForBarcode(new Barcode(rep.barcode));
+                DataManager.TrySaveActiveSave(Il2CppSLZ.Marrow.SaveData.SaveFlags.DefaultAndPlayerSettingsAndUnlocks);
             });
             DevUtils.Notify("Selected Crate!");
         }

@@ -561,6 +561,7 @@
 		<Compile Include="Utils\AssetWarehouseUtil\CrateType.cs" />
 		<Compile Include="Utils\AssetWarehouseUtil\RetrievingTask.cs" />
 		<Compile Include="Utils\AmmoUtil\AmmoUtility.cs" />
+		<Compile Include="Utils\Dangerous\SaveDataUtility.cs" />
 		<Content Include="Directory.Build.props" />
 	</ItemGroup>
 
