@@ -1,7 +1,6 @@
 ﻿using HarmonyLib;
 using Il2CppSLZ.Marrow;
 using Il2CppSLZ.Marrow.Data;
-using Il2CppWebSocketSharp;
 using LabUtils.Utils.InfiniteAmmoUtil;
 
 namespace LabUtils.Developer.Patches
@@ -32,7 +31,6 @@ namespace LabUtils.Developer.Patches
             if (!AmmoUtility.UnlimitedAmmo.Value) return;
 
             var group = __instance.GetGroupByCartridge(cartridge);
-            if (group.IsNullOrEmpty()) return;
 
             switch (group)
             {

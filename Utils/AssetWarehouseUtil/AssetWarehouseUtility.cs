@@ -1,10 +1,13 @@
 ﻿using BoneLib;
 using BoneLib.BoneMenu;
 using Il2CppSLZ.Bonelab;
+using Il2CppSLZ.Bonelab.SaveData;
 using Il2CppSLZ.Marrow.SceneStreaming;
 using Il2CppSLZ.Marrow.Warehouse;
+using Il2CppSLZ.Props;
 using LabUtils.Developer;
 using MelonLoader;
+using System.Text.Json.Serialization;
 using UnityEngine;
 using Page = BoneLib.BoneMenu.Page;
 
@@ -27,7 +30,7 @@ namespace LabUtils.Utils.AssetWarehouseUtil
             settings.CreateBool("Show Unlockable", Color.white, ShowUnlockable.Value, (a) => ShowUnlockable.Value = a);
             settings.CreateBool("Include Tags", Color.white, IncludeTags.Value, (a) => IncludeTags.Value = a);
             Page.CreateString("Search Query", OverrideColor.green, "Ford", OnSearched);
-            ResultsPage = Page.CreatePage("Results", OverrideColor.lightBlue, maxElements: 10);
+            ResultsPage = Page.CreatePage("Results", OverrideColor.lightBlue, maxElements: 5);
             SelectedPage = Page.CreatePage("Selected Crate", OverrideColor.lightBlue);
         }
 
@@ -41,7 +44,7 @@ namespace LabUtils.Utils.AssetWarehouseUtil
             ResultsPage.RemoveAll();
             foreach (var rep in reps)
             {
-                ResultsPage.CreateFunction(rep.title, OverrideColor.lightBlue, () => OnClickCrate(rep));
+                ResultsPage.CreateFunction(rep.title, OverrideColor.lightBlue, () => OnClickCrate(rep)).SetTooltip(rep.ToString());
             }
             DevUtils.Notify("Retrieved Results - Asset Warehouse");
             RetrievingTask.isRunning = false;
@@ -49,9 +52,7 @@ namespace LabUtils.Utils.AssetWarehouseUtil
         private static void OnClickCrate(CrateRep rep)
         {
             SelectedPage.RemoveAll();
-            SelectedPage.CreateFunction($"Barcode: {rep.barcode}", Color.white, null);
-            SelectedPage.CreateFunction($"{rep.title} from {rep.pallet_Title} by {rep.pallet_Author}", Color.white, null);
-            SelectedPage.CreateFunction($"Description: {rep.description}", Color.white, null);
+            SelectedPage.CreateFunction($"{rep.title}", Color.white, null).SetTooltip(rep.ToString());
             switch (rep.type)
             {
                 case CrateType.Level:
@@ -68,6 +69,14 @@ namespace LabUtils.Utils.AssetWarehouseUtil
             {
                 if (!AssetWarehouse.Instance.TryGetCrate(new Barcode(rep.barcode), out Crate crate)) return;
                 crate.PreloadAssets();
+            });
+            SelectedPage.CreateFunction("Unlock Crate", OverrideColor.red, () =>
+            {
+                GachaCapsule.u.IncrementUnlockForBarcode(new Barcode(rep.barcode));
+            });
+            SelectedPage.CreateFunction("Lock Crate", OverrideColor.red, () =>
+            {
+                GachaCapsule.u.ClearUnlockForBarcode(new Barcode(rep.barcode));
             });
             DevUtils.Notify("Selected Crate!");
         }
