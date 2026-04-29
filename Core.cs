@@ -4,7 +4,7 @@ using UnityEngine;
 
 [assembly: MelonInfo(typeof(LabUtils.Core), "LabUtils", "1.0.0", "cheesy", null)]
 [assembly: MelonGame("Stress Level Zero", "BONELAB")]
-
+[assembly: MelonAdditionalDependencies("BoneLib", "LabFusion")]
 namespace LabUtils
 {
     public class Core : MelonMod
