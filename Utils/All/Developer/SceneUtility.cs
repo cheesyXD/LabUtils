@@ -41,7 +41,7 @@ namespace LabUtils.Utils.All.Developer
             var pooleePage = SelectedEntity.CreatePage("Poolee", Color.white);
             entity.Bodies.ToList().ForEach(body =>
             {
-                var bodyPage = pooleePage.CreatePage(body.name, Color.white);
+                var bodyPage = bodiesPage.CreatePage(body.name, Color.white);
                 bodyPage.CreateFloat("Mass", Color.white, body._rigidbody.mass, 0.1f, 0.1f, ushort.MaxValue, (a) => body._rigidbody.mass = a);
                 bodyPage.CreateFloat("Drag", Color.white, body._rigidbody.drag, 0.1f, 0f, ushort.MaxValue, (a) => body._rigidbody.drag = a);
                 bodyPage.CreateFloat("Angular Drag", Color.white, body._rigidbody.angularDrag, 0.1f, 0f, ushort.MaxValue, (a) => body._rigidbody.angularDrag = a);
