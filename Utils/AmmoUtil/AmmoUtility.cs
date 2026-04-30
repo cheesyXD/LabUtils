@@ -18,10 +18,16 @@ namespace LabUtils.Utils.InfiniteAmmoUtil
         {
             string name = Random.Range(0, 100) > 90 ? "AmmoLab" : "Ammo Utility";
             Page = UICore.UtilitiesPage.CreatePage(name, OverrideColor.red);
-            Page.CreateBool("Unlimited Ammo", Color.white, UnlimitedAmmo.Value, (a) => UnlimitedAmmo.Value = a);
+            Page.CreateBool("Unlimited Ammo", Color.white, UnlimitedAmmo.Value, VeryHappyAmmoMode);
             Page.CreateBool("Unlimited Magazines", Color.white, UnlimitedMagazines.Value, (a) => UnlimitedMagazines.Value = a);
             Page.CreateBool("Unlimited Shells/Slugs/Cartridges", Color.white, UnlimitedShells.Value, (a) => UnlimitedShells.Value = a);
             Page.CreateBool("Grip Magazine Refill", Color.white, GripMagazineRefill.Value, (a) => GripMagazineRefill.Value = a);
+        }
+
+        private void VeryHappyAmmoMode(bool obj)
+        {
+            UnlimitedAmmo.Value = obj;
+            DevUtils.Notify(obj ? "Very Happy Ammo Added" : "Very Happy Ammo Removed", 1f);
         }
     }
 }
