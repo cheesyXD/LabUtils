@@ -555,13 +555,15 @@
 		<Compile Include="Developer\LabData.cs" />
 		<Compile Include="Developer\Logger.cs" />
 		<Compile Include="Developer\Patches\AmmoPatches.cs" />
-		<Compile Include="Developer\Patches\AssetWarehousePatches.cs" />
+		<Compile Include="Developer\Patches\AssetStreamingPatches.cs" />
 		<Compile Include="Developer\Patches\PlayerPatches.cs" />
 		<Compile Include="Developer\UICore.cs" />
 		<Compile Include="Developer\Utility.cs" />
 		<Compile Include="OverrideColor.cs" />
+		<Compile Include="Utils\All\Developer\DebugUtility.cs" />
 		<Compile Include="Utils\All\Developer\SceneUtility.cs" />
 		<Compile Include="Utils\All\HealthUtility.cs" />
+		<Compile Include="Utils\All\RagdollUtility.cs" />
 		<Compile Include="Utils\AssetWarehouseUtil\AssetWarehouseUtility.cs" />
 		<Compile Include="Utils\AssetWarehouseUtil\CrateRep.cs" />
 		<Compile Include="Utils\AssetWarehouseUtil\CrateType.cs" />

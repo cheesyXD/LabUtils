@@ -30,7 +30,7 @@ namespace LabUtils.Utils.All
         protected override void OnLoad()
         {
             Hooking.OnLevelLoaded += Hooking_OnLevelLoaded;
-            Page = UICore.UtilitiesPage.CreatePage("Health Utility", OverrideColor.green);
+            Page = UICore.UtilitiesPage.CreatePage("Health Utility", OverrideColor.green, maxElements: 10);
             Page.CreateBool("God Mode", Color.white, GodMode.Value, ChangeGodMode);
             Page.CreateFunction("Heal", Color.white, Heal);
             Page.CreateFunction("DIE", Color.white, Die);
