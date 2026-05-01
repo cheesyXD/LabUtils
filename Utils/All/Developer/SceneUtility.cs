@@ -1,5 +1,9 @@
-﻿using BoneLib.BoneMenu;
+﻿using BoneLib;
+using BoneLib.BoneMenu;
 using Il2CppSLZ.Marrow.Interaction;
+using LabFusion.Marrow.Integration;
+using LabFusion.Network;
+using LabFusion.Utilities;
 using LabUtils.Developer;
 using System;
 using System.Collections.Generic;
@@ -17,16 +21,43 @@ namespace LabUtils.Utils.All.Developer
         public static Page SelectedEntity;
         protected override void OnLoad()
         {
+            Hooking.OnGripAttached += Hooking_OnGripAttached;
             Page = UICore.UtilitiesPage.CreatePage("Scene Utility", OverrideColor.green);
             Page.CreateFunction("Refresh", Color.white, Refresh);
-            MarrowEntities = Page.CreatePage("Marrow Entities", Color.white);
+            Page.CreateFunction("Entity Grip Listen", Color.white, EntityGripListen);
+            MarrowEntities = Page.CreatePage("Marrow Entities", Color.white, maxElements: 6);
             SelectedEntity = Page.CreatePage("Selected Entity", Color.white);
+        }
+        private static bool isListening;
+        private static void EntityGripListen()
+        {
+            if (NetworkInfo.HasServer)
+            {
+                isListening = false;
+                DevUtils.Notify("Cannot listen while in a network session.");
+                return;
+            }
+            isListening = !isListening;
+             DevUtils.Notify($"Entity Grip Listen {(isListening ? "Started" : "Stopped")}");
+        }
+
+        private void Hooking_OnGripAttached(Il2CppSLZ.Marrow.Grip grip, Il2CppSLZ.Marrow.Hand hand)
+        {
+            if (!isListening) return;
+            var entity = grip._marrowEntity;
+            SelectEntity(entity);
+            DevUtils.Notify($"Selected Entity {entity.name} via Grip");
         }
 
         private void Refresh()
         {
             SelectedEntity.RemoveAll();
             MarrowEntities.RemoveAll();
+            if(NetworkInfo.HasServer)
+            {
+                DevUtils.Notify("Cannot refresh while in a network session.");
+                return;
+            }
             var entities = UnityEngine.Object.FindObjectsOfType<MarrowEntity>();
             foreach (var entity in entities)
             {
@@ -36,6 +67,11 @@ namespace LabUtils.Utils.All.Developer
 
         private void SelectEntity(MarrowEntity entity)
         {
+            if (NetworkInfo.HasServer)
+            {
+                DevUtils.Notify("Cannot select while in server.");
+                return;
+            }
             SelectedEntity.RemoveAll();
             var bodiesPage = SelectedEntity.CreatePage("Bodies", Color.white);
             var pooleePage = SelectedEntity.CreatePage("Poolee", Color.white);
@@ -51,10 +87,12 @@ namespace LabUtils.Utils.All.Developer
                 bodyPage.CreateBool("Use Gravity", Color.white, body._rigidbody.useGravity, (a) => body._rigidbody.useGravity = a);
             });
             var poolee = entity._poolee;
-            if (poolee)
+            if (poolee) 
             {
                 pooleePage.CreateFunction("Despawn", Color.white, () =>
                 {
+                    if (NetworkInfo.HasServer)
+                        return;
                     poolee.Despawn();
                     SelectedEntity.RemoveAll();
                 });

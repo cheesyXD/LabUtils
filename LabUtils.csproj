@@ -204,6 +204,9 @@
 		<Reference Include="LabFusion">
 		  <HintPath>..\..\Meta Horizon\Software\Software\stress-level-zero-inc-bonelab\Mods\LabFusion.dll</HintPath>
 		</Reference>
+		<Reference Include="Newtonsoft.Json">
+		  <HintPath>..\..\Meta Horizon\Software\Software\stress-level-zero-inc-bonelab\MelonLoader\net35\Newtonsoft.Json.dll</HintPath>
+		</Reference>
 		<Reference Include="Unity.Addressables">
 			<HintPath>$(GamePath)/MelonLoader\Il2CppAssemblies\Unity.Addressables.dll</HintPath>
 		</Reference>

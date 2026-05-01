@@ -1,13 +1,12 @@
 ﻿using BoneLib;
-using BoneLib.BoneMenu;
 using Il2CppSLZ.Bonelab;
 using Il2CppSLZ.Bonelab.SaveData;
 using Il2CppSLZ.Marrow.SceneStreaming;
 using Il2CppSLZ.Marrow.Warehouse;
-using Il2CppSLZ.Props;
+using Il2CppSystem.Xml;
 using LabUtils.Developer;
 using MelonLoader;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using UnityEngine;
 using Page = BoneLib.BoneMenu.Page;
 
@@ -18,12 +17,26 @@ namespace LabUtils.Utils.AssetWarehouseUtil
         public static Page Page;
         public static Page ResultsPage;
         public static Page SelectedPage;
+        public static Page FavoritesPage;
         public static MelonPreferences_Entry<bool> ShowRedacted { get; set; } = Core.Preferences.CreateEntry<bool>("ShowRedacted", true);
         public static MelonPreferences_Entry<bool> ShowUnlockable { get; set; } = Core.Preferences.CreateEntry<bool>("ShowUnlockable", true);
 
         public static MelonPreferences_Entry<bool> IncludeTags { get; set; } = Core.Preferences.CreateEntry<bool>("IncTags", true);
+        public static MelonPreferences_Entry<string> SerializedFavorites { get; set; } = Core.Preferences.CreateEntry<string>("Favorites", JsonConvert.SerializeObject(new List<CrateRep>()));
+        public static List<CrateRep> FavoriteCrates
+        {
+            get
+            {
+                return JsonConvert.DeserializeObject<List<CrateRep>>(SerializedFavorites.Value) ?? new List<CrateRep>();
+            }
+            set
+            {
+                SerializedFavorites.Value = JsonConvert.SerializeObject(value);
+            }
+        }
         protected override void OnLoad()
         {
+            FavoriteCrates = JsonConvert.DeserializeObject<List<CrateRep>>(SerializedFavorites.Value) ?? new List<CrateRep>();
             Page = UICore.UtilitiesPage.CreatePage("Asset Warehouse", OverrideColor.red);
             var settings = Page.CreatePage("Settings", Color.white);
             settings.CreateBool("Show Redacted", Color.white, ShowRedacted.Value, (a) => ShowRedacted.Value = a);
@@ -32,6 +45,17 @@ namespace LabUtils.Utils.AssetWarehouseUtil
             Page.CreateString("Search Query", OverrideColor.green, "Ford", OnSearched);
             ResultsPage = Page.CreatePage("Results", OverrideColor.lightBlue, maxElements: 5);
             SelectedPage = Page.CreatePage("Selected Crate", OverrideColor.lightBlue);
+            FavoritesPage = Page.CreatePage("Favorite Crates", Color.white);
+            RefreshFavoritesPage();
+        }
+
+        private static void RefreshFavoritesPage()
+        {
+            FavoritesPage.RemoveAll();
+            foreach (var rep in FavoriteCrates)
+            {
+                FavoritesPage.CreateFunction(rep.title, OverrideColor.lightBlue, () => OnClickCrate(rep)).SetTooltip(rep.ToString());
+            }
         }
 
         private static void OnSearched(string value)
@@ -56,7 +80,7 @@ namespace LabUtils.Utils.AssetWarehouseUtil
             switch (rep.type)
             {
                 case CrateType.Level:
-                    SelectedPage.CreateFunction("Load Level", OverrideColor.red, ()=>SceneStreamer.Load(new(rep.barcode)));
+                    SelectedPage.CreateFunction("Load Level", OverrideColor.red, () => SceneStreamer.Load(new(rep.barcode)));
                     break;
                 case CrateType.Avatar:
                     SelectedPage.CreateFunction("Change Avatar", OverrideColor.red, () => Player.RigManager.SwapAvatarCrate(new(rep.barcode)));
@@ -80,6 +104,16 @@ namespace LabUtils.Utils.AssetWarehouseUtil
                 DataManager.ActiveSave.Unlocks.ClearUnlockForBarcode(new Barcode(rep.barcode));
                 DataManager.TrySaveActiveSave(Il2CppSLZ.Marrow.SaveData.SaveFlags.DefaultAndPlayerSettingsAndUnlocks);
             });
+            SelectedPage.CreateFunction("Favorite Crate", OverrideColor.red, () =>
+            {
+                if(!FavoriteCrates.Contains(rep))FavoriteCrates.Add(rep);
+                RefreshFavoritesPage();
+            });
+            SelectedPage.CreateFunction("UnFavorite Crate", OverrideColor.red, () =>
+            {
+                if (FavoriteCrates.Contains(rep)) FavoriteCrates.Remove(rep);
+                RefreshFavoritesPage();
+            });
             DevUtils.Notify("Selected Crate!");
         }
 
@@ -87,7 +121,8 @@ namespace LabUtils.Utils.AssetWarehouseUtil
         {
             if (!AssetWarehouse.Instance.TryGetCrate(new Barcode(barcode), out SpawnableCrate crate)) return;
             var spawnGuns = UnityEngine.Object.FindObjectsOfType<SpawnGun>();
-            foreach (var spawnGun in spawnGuns) {
+            foreach (var spawnGun in spawnGuns)
+            {
                 spawnGun._lastSelectedCrate = crate;
                 spawnGun._selectedCrate = crate;
             }
