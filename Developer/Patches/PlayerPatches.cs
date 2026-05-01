@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using BoneLib;
+using HarmonyLib;
 using Il2CppSLZ.Marrow;
 using LabUtils.Utils.All;
 
@@ -10,8 +11,18 @@ namespace LabUtils.Developer.Patches
         [HarmonyPatch(typeof(Player_Health), nameof(Player_Health.TAKEDAMAGE))]
         [HarmonyPrefix]
         public static bool TakeDamagePrefix(ref float damage)
-        {
+        {          
             return !HealthUtility.GodMode.Value;
+        }
+
+        [HarmonyPatch(typeof(Player_Health), nameof(Player_Health.TAKEDAMAGE))]
+        [HarmonyPostfix]
+        public static void TakeDamagePostfix(float damage)
+        {
+            if (Player.RigManager.health.curr_Health < 1 && !HealthUtility.GodMode.Value)
+            {
+                RagdollUtility.Ragdoll();
+            }
         }
 
         [HarmonyPatch(typeof(Player_Health), nameof(Player_Health.SetFullHealth))]

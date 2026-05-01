@@ -1,7 +1,7 @@
 # LabUtils
 Utilities that liberates features of BONELAB (W.I.P)
 
-# Current Features
+# Utilities
 
 ## Asset Warehouse Utility
 
@@ -16,6 +16,23 @@ Utilities that liberates features of BONELAB (W.I.P)
 - Infinite Magazines, Have your magazines refilled for free like SODA!
 - Infinite Slugs/Shells and Cartridges, Have weapons like revolvers, snipers or shotguns never run out of precious ammo!
 - Grip Refill, FREE REFILLS WHEN YOU GRIP YOUR MAGAZINES (like boneworks golden mags)
+
+## Scene Utility
+
+- Edit the state of Marrow Entities
+- Edit the Physics of Objects (Mass, Drag, Gravity) or the Scene's Physics
+- Edit the lighting and render settings of the scene
+
+## Health Utility
+
+- God Mode
+- Die On Command
+- Reload Level on Death Toggle
+
+## Ragdoll Utility
+
+- Ragdoll On Death
+- (Un)Ragdoll On Command
 
 # DANGEROUS FEATURES
 
