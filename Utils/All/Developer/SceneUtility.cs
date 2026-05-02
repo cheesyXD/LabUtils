@@ -17,12 +17,12 @@ namespace LabUtils.Utils.All.Developer
         private static MarrowEntity entity;
         protected override void OnLoad()
         {
-            Page = UICore.UtilitiesPage.CreatePage("Scene Utility", OverrideColor.green, maxElements: 10);
-            Page.CreateFunction("Refresh", Color.white, Refresh);
-            Page.CreateFunction("Entity Grip Listen", Color.white, EntityGripListen).SetTooltip("Listens for a Grip on any object that has an entity to automatically select them faster!");
-            SceneSettings = Page.CreatePage("Scene Settings", Color.white, maxElements: 10);
-            MarrowEntities = Page.CreatePage("Marrow Entities", Color.white, maxElements: 10);
-            SelectedEntity = Page.CreatePage("Selected Entity", Color.white, maxElements: 10);
+            Page = UICore.UtilitiesPage.CreatePage("Scene Utility", ColorPlus.GetNextColor(), maxElements: 10);
+            Page.CreateFunction("Refresh", ColorPlus.GetNextColor(), Refresh);
+            Page.CreateFunction("Entity Grip Listen", ColorPlus.GetNextColor(), EntityGripListen).SetTooltip("Listens for a Grip on any object that has an entity to automatically select them faster!");
+            SceneSettings = Page.CreatePage("Scene Settings", ColorPlus.GetNextColor(), maxElements: 10);
+            MarrowEntities = Page.CreatePage("Marrow Entities", ColorPlus.GetNextColor(), maxElements: 10);
+            SelectedEntity = Page.CreatePage("Selected Entity", ColorPlus.GetNextColor(), maxElements: 10);
             Hooking.OnGripAttached += Hooking_OnGripAttached;
             Hooking.OnLevelLoaded += (_) => CreateSceneSettings();
         }
@@ -36,7 +36,7 @@ namespace LabUtils.Utils.All.Developer
             public static SceneSetting Create()
             {
                 float sunIntensity = 1f;
-                Color sunColor = Color.white;
+                Color sunColor = ColorPlus.GetNextColor();
                 if (RenderSettings.sun)
                 {
                     sunIntensity = RenderSettings.sun.intensity;
@@ -56,19 +56,19 @@ namespace LabUtils.Utils.All.Developer
         {
             sceneSettings = SceneSetting.Create();
             SceneSettings.RemoveAll();
-            SceneSettings.CreateBool("Fog", Color.white, sceneSettings.fog, (a)=> sceneSettings.fog = a);
+            SceneSettings.CreateBool("Fog", ColorPlus.GetNextColor(), sceneSettings.fog, (a)=> sceneSettings.fog = a);
             if (RenderSettings.sun)
             {
-                SceneSettings.CreateFloat("Sun Intensity", Color.white, sceneSettings.sunIntensity, 1f, 0f, ushort.MaxValue, (a) => sceneSettings.sunIntensity = a);
-                SceneSettings.CreateString("Sun Color", Color.white, ColorUtility.ToHtmlStringRGBA(sceneSettings.sunColor), (a) => sceneSettings.sunColor = OverrideColor.GetColor(a));
+                SceneSettings.CreateFloat("Sun Intensity", ColorPlus.GetNextColor(), sceneSettings.sunIntensity, 1f, 0f, ushort.MaxValue, (a) => sceneSettings.sunIntensity = a);
+                SceneSettings.CreateString("Sun Color", ColorPlus.GetNextColor(), ColorUtility.ToHtmlStringRGBA(sceneSettings.sunColor), (a) => sceneSettings.sunColor = ColorPlus.GetColor(a));
             }          
             var ogPhysicsGravity = Physics.gravity;
-            var gravityPage = SceneSettings.CreatePage("Gravity", Color.white, maxElements: 10);
-            gravityPage.CreateFloat("x", Color.white, sceneSettings.gravity.x, 1, short.MinValue, short.MaxValue, (a)=>sceneSettings.gravity.x = a);
-            gravityPage.CreateFloat("y", Color.white, sceneSettings.gravity.y, 1, short.MinValue, short.MaxValue, (a) => sceneSettings.gravity.y = a);
-            gravityPage.CreateFloat("z", Color.white, sceneSettings.gravity.z, 1, short.MinValue, short.MaxValue, (a) => sceneSettings.gravity.z = a);
-            gravityPage.CreateFunction("Reset Gravity", Color.white, () => sceneSettings.gravity = ogPhysicsGravity);
-            SceneSettings.CreateFunction("Apply Scene Settings", Color.white, ApplySceneSettings);
+            var gravityPage = SceneSettings.CreatePage("Gravity", ColorPlus.GetNextColor(), maxElements: 10);
+            gravityPage.CreateFloat("x", ColorPlus.GetNextColor(), sceneSettings.gravity.x, 1, short.MinValue, short.MaxValue, (a)=>sceneSettings.gravity.x = a);
+            gravityPage.CreateFloat("y", ColorPlus.GetNextColor(), sceneSettings.gravity.y, 1, short.MinValue, short.MaxValue, (a) => sceneSettings.gravity.y = a);
+            gravityPage.CreateFloat("z", ColorPlus.GetNextColor(), sceneSettings.gravity.z, 1, short.MinValue, short.MaxValue, (a) => sceneSettings.gravity.z = a);
+            gravityPage.CreateFunction("Reset Gravity", ColorPlus.GetNextColor(), () => sceneSettings.gravity = ogPhysicsGravity);
+            SceneSettings.CreateFunction("Apply Scene Settings", ColorPlus.GetNextColor(), ApplySceneSettings);
         }
 
         private static void ApplySceneSettings()
@@ -118,7 +118,7 @@ namespace LabUtils.Utils.All.Developer
             var entities = UnityEngine.Object.FindObjectsOfType<MarrowEntity>();
             foreach (var entity in entities)
             {
-                MarrowEntities.CreateFunction(entity.name, Color.white, () => SelectEntity(entity));
+                MarrowEntities.CreateFunction(entity.name, ColorPlus.GetNextColor(), () => SelectEntity(entity));
             }
         }
 
@@ -131,23 +131,23 @@ namespace LabUtils.Utils.All.Developer
             }
             entity = _entity;
             SelectedEntity.RemoveAll();
-            var bodiesPage = SelectedEntity.CreatePage("Bodies", Color.white, maxElements: 10);
-            var pooleePage = SelectedEntity.CreatePage("Poolee", Color.white, maxElements: 10);
+            var bodiesPage = SelectedEntity.CreatePage("Bodies", ColorPlus.GetNextColor(), maxElements: 10);
+            var pooleePage = SelectedEntity.CreatePage("Poolee", ColorPlus.GetNextColor(), maxElements: 10);
             entity.Bodies.ToList().ForEach(body =>
             {
-                var bodyPage = bodiesPage.CreatePage(body.name, Color.white, maxElements: 10);
-                bodyPage.CreateFloat("Mass", Color.white, body._rigidbody.mass, 1f, 0.01f, ushort.MaxValue, (a) => body._rigidbody.mass = a);
-                bodyPage.CreateFloat("Drag", Color.white, body._rigidbody.drag, 1f, 0f, ushort.MaxValue, (a) => body._rigidbody.drag = a);
-                bodyPage.CreateFloat("Angular Drag", Color.white, body._rigidbody.angularDrag, 1f, 0f, ushort.MaxValue, (a) => body._rigidbody.angularDrag = a);
-                bodyPage.CreateFloat("Max Depenetration Velocity", Color.white, body._rigidbody.maxDepenetrationVelocity, 1f, 0f, ushort.MaxValue, (a) => body._rigidbody.maxDepenetrationVelocity = a);
-                bodyPage.CreateFloat("Max Angular Velocity", Color.white, body._rigidbody.maxAngularVelocity, 1f, 0f, ushort.MaxValue, (a) => body._rigidbody.maxAngularVelocity = a);
-                bodyPage.CreateBool("Is Kinematic", Color.white, body._rigidbody.isKinematic, (a) => body._rigidbody.isKinematic = a);
-                bodyPage.CreateBool("Use Gravity", Color.white, body._rigidbody.useGravity, (a) => body._rigidbody.useGravity = a);
+                var bodyPage = bodiesPage.CreatePage(body.name, ColorPlus.GetNextColor(), maxElements: 10);
+                bodyPage.CreateFloat("Mass", ColorPlus.GetNextColor(), body._rigidbody.mass, 1f, 0.01f, ushort.MaxValue, (a) => body._rigidbody.mass = a);
+                bodyPage.CreateFloat("Drag", ColorPlus.GetNextColor(), body._rigidbody.drag, 1f, 0f, ushort.MaxValue, (a) => body._rigidbody.drag = a);
+                bodyPage.CreateFloat("Angular Drag", ColorPlus.GetNextColor(), body._rigidbody.angularDrag, 1f, 0f, ushort.MaxValue, (a) => body._rigidbody.angularDrag = a);
+                bodyPage.CreateFloat("Max Depenetration Velocity", ColorPlus.GetNextColor(), body._rigidbody.maxDepenetrationVelocity, 1f, 0f, ushort.MaxValue, (a) => body._rigidbody.maxDepenetrationVelocity = a);
+                bodyPage.CreateFloat("Max Angular Velocity", ColorPlus.GetNextColor(), body._rigidbody.maxAngularVelocity, 1f, 0f, ushort.MaxValue, (a) => body._rigidbody.maxAngularVelocity = a);
+                bodyPage.CreateBool("Is Kinematic", ColorPlus.GetNextColor(), body._rigidbody.isKinematic, (a) => body._rigidbody.isKinematic = a);
+                bodyPage.CreateBool("Use Gravity", ColorPlus.GetNextColor(), body._rigidbody.useGravity, (a) => body._rigidbody.useGravity = a);
             });
             var poolee = entity._poolee;
             if (poolee) 
             {
-                pooleePage.CreateFunction("Despawn", Color.white, () =>
+                pooleePage.CreateFunction("Despawn", ColorPlus.GetNextColor(), () =>
                 {
                     if (NetworkInfo.HasServer)
                         return;

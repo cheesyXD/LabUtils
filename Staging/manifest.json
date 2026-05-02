@@ -1,6 +1,6 @@
 {
     "name": "LabUtils",
-    "version_number": "0.2.1",
+    "version_number": "0.3.0",
     "website_url": "https://github.com/cheesyXD/LabUtils",
     "description": "Utilities that liberates features of BONELAB (W.I.P)",
     "dependencies": [

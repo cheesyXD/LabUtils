@@ -16,9 +16,9 @@ namespace LabUtils.Utils.All.Developer
         
         protected override void OnLoad()
         {
-            var page = UICore.UtilitiesPage.CreatePage("Debug Utility", OverrideColor.green);
-            page.CreateBool("Asset Spawner Logger", Color.white, AssetSpawnerLogger.Value, (a) => AssetSpawnerLogger.Value = a);
-            page.CreateBool("Scene Streamer Logger", Color.white, SceneStreamerLogger.Value, (a) => SceneStreamerLogger.Value = a);
+            var page = UICore.UtilitiesPage.CreatePage("Debug Utility", OverrideColorPlus.GetNextColor()green);
+            page.CreateBool("Asset Spawner Logger", ColorPlus.GetNextColor()white, AssetSpawnerLogger.Value, (a) => AssetSpawnerLogger.Value = a);
+            page.CreateBool("Scene Streamer Logger", ColorPlus.GetNextColor()white, SceneStreamerLogger.Value, (a) => SceneStreamerLogger.Value = a);
         }
     }
     */

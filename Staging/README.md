@@ -34,6 +34,12 @@ Utilities that liberates features of BONELAB (W.I.P)
 - Ragdoll On Death
 - (Un)Ragdoll On Command
 
+## Achievement Utlity
+- UNLOCK STEAM AND OCULUS ACHIVEMENTS FOR BONELAB (CANNOT BE REVERTED)
+
+## Fun Utility
+- find out for yourself ;)
+
 # DANGEROUS FEATURES
 
 ## Save Data

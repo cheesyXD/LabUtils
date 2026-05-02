@@ -30,12 +30,12 @@ namespace LabUtils.Utils.All
         protected override void OnLoad()
         {
             Hooking.OnLevelLoaded += Hooking_OnLevelLoaded;
-            Page = UICore.UtilitiesPage.CreatePage("Health Utility", OverrideColor.green, maxElements: 10);
-            Page.CreateBool("God Mode", Color.white, GodMode.Value, ChangeGodMode);
-            Page.CreateFunction("Heal", Color.white, Heal);
-            Page.CreateFunction("DIE", Color.white, Die);
-            Page.CreateEnum("Health Mode", Color.white, HealthMode, ChangeHealthMode);
-            Page.CreateEnum("Reload Level On Death", Color.white, ReloadOnDeath.Value , ReloadOnDeathMode);
+            Page = UICore.UtilitiesPage.CreatePage("Health Utility", ColorPlus.GetNextColor(), maxElements: 10);
+            Page.CreateBool("God Mode", ColorPlus.GetNextColor(), GodMode.Value, ChangeGodMode);
+            Page.CreateFunction("Heal", ColorPlus.GetNextColor(), Heal);
+            Page.CreateFunction("DIE", ColorPlus.GetNextColor(), Die);
+            Page.CreateEnum("Health Mode", ColorPlus.GetNextColor(), HealthMode, ChangeHealthMode);
+            Page.CreateEnum("Reload Level On Death", ColorPlus.GetNextColor(), ReloadOnDeath.Value , ReloadOnDeathMode);
         }
         private static bool defaultReloadOnDeath;
         private void Hooking_OnLevelLoaded(LevelInfo obj)

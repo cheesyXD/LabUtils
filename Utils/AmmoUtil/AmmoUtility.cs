@@ -18,11 +18,11 @@ namespace LabUtils.Utils.InfiniteAmmoUtil
         protected override void OnLoad()
         {
             string name = Random.Range(0, 100) > 90 ? "AmmoLab" : "Ammo Utility";
-            Page = UICore.UtilitiesPage.CreatePage(name, OverrideColor.red, maxElements: 10);
-            Page.CreateBool("Unlimited Ammo", Color.white, UnlimitedAmmo.Value, VeryHappyAmmoMode);
-            Page.CreateBool("Unlimited Magazines", Color.white, UnlimitedMagazines.Value, (a) => UnlimitedMagazines.Value = a);
-            Page.CreateBool("Unlimited Shells/Slugs/Cartridges", Color.white, UnlimitedShells.Value, (a) => UnlimitedShells.Value = a);
-            Page.CreateBool("Grip Magazine Refill", Color.white, GripMagazineRefill.Value, (a) => GripMagazineRefill.Value = a);
+            Page = UICore.UtilitiesPage.CreatePage(name, ColorPlus.GetNextColor(), maxElements: 10);
+            Page.CreateBool("Unlimited Ammo", ColorPlus.GetNextColor(), UnlimitedAmmo.Value, VeryHappyAmmoMode);
+            Page.CreateBool("Unlimited Magazines", ColorPlus.GetNextColor(), UnlimitedMagazines.Value, (a) => UnlimitedMagazines.Value = a);
+            Page.CreateBool("Unlimited Shells/Slugs/Cartridges", ColorPlus.GetNextColor(), UnlimitedShells.Value, (a) => UnlimitedShells.Value = a);
+            Page.CreateBool("Grip Magazine Refill", ColorPlus.GetNextColor(), GripMagazineRefill.Value, (a) => GripMagazineRefill.Value = a);
         }
 
         private void VeryHappyAmmoMode(bool obj)

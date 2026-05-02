@@ -25,15 +25,15 @@ namespace LabUtils.Utils.AssetWarehouseUtil
         public static MelonPreferences_Entry<string[]> FavoriteCrates { get; set; } = Core.Preferences.CreateEntry("Favorites", new string[0]);
         protected override void OnLoad()
         {
-            Page = UICore.UtilitiesPage.CreatePage("Asset Warehouse", OverrideColor.red, maxElements: 10);
-            var settings = Page.CreatePage("Settings", Color.white, maxElements: 10);
-            settings.CreateBool("Show Redacted", Color.white, ShowRedacted.Value, (a) => ShowRedacted.Value = a);
-            settings.CreateBool("Show Unlockable", Color.white, ShowUnlockable.Value, (a) => ShowUnlockable.Value = a);
-            settings.CreateBool("Include Tags", Color.white, IncludeTags.Value, (a) => IncludeTags.Value = a);
-            Page.CreateString("Search Query", OverrideColor.green, "Ford", OnSearched);
-            ResultsPage = Page.CreatePage("Results", OverrideColor.lightBlue, maxElements: 10);
-            SelectedPage = Page.CreatePage("Selected Crate", OverrideColor.lightBlue, maxElements: 10);
-            FavoritesPage = Page.CreatePage("Favorite Crates", Color.white, maxElements: 10);
+            Page = UICore.UtilitiesPage.CreatePage("Asset Warehouse", ColorPlus.GetNextColor(), maxElements: 10);
+            var settings = Page.CreatePage("Settings", ColorPlus.GetNextColor(), maxElements: 10);
+            settings.CreateBool("Show Redacted", ColorPlus.GetNextColor(), ShowRedacted.Value, (a) => ShowRedacted.Value = a);
+            settings.CreateBool("Show Unlockable", ColorPlus.GetNextColor(), ShowUnlockable.Value, (a) => ShowUnlockable.Value = a);
+            settings.CreateBool("Include Tags", ColorPlus.GetNextColor(), IncludeTags.Value, (a) => IncludeTags.Value = a);
+            Page.CreateString("Search Query", ColorPlus.GetNextColor(), "Ford", OnSearched);
+            ResultsPage = Page.CreatePage("Results",  ColorPlus.GetNextColor(), maxElements: 10);
+            SelectedPage = Page.CreatePage("Selected Crate",  ColorPlus.GetNextColor(), maxElements: 10);
+            FavoritesPage = Page.CreatePage("Favorite Crates", ColorPlus.GetNextColor(), maxElements: 10);
             Hooking.OnWarehouseReady += Hooking_OnWarehouseReady;
         }
 
@@ -50,7 +50,7 @@ namespace LabUtils.Utils.AssetWarehouseUtil
             {
                 if (!AssetWarehouse.Instance.TryGetCrate(new(barcode), out var crate)) continue;
                 var rep = CrateRep.CreateCrateRep(crate);
-                FavoritesPage.CreateFunction(rep.title, OverrideColor.lightBlue, () => OnClickCrate(rep)).SetTooltip(rep.ToString());
+                FavoritesPage.CreateFunction(rep.title, ColorPlus.GetNextColor(), () => OnClickCrate(rep)).SetTooltip(rep.ToString());
             }
         }
 
@@ -64,7 +64,7 @@ namespace LabUtils.Utils.AssetWarehouseUtil
             ResultsPage.RemoveAll();
             foreach (var rep in reps)
             {
-                ResultsPage.CreateFunction(rep.title, OverrideColor.lightBlue, () => OnClickCrate(rep)).SetTooltip(rep.ToString());
+                ResultsPage.CreateFunction(rep.title, ColorPlus.GetNextColor(), () => OnClickCrate(rep)).SetTooltip(rep.ToString());
             }
             DevUtils.Notify("Retrieved Results - Asset Warehouse");
             RetrievingTask.isRunning = false;
@@ -72,41 +72,41 @@ namespace LabUtils.Utils.AssetWarehouseUtil
         private static void OnClickCrate(CrateRep rep)
         {
             SelectedPage.RemoveAll();
-            SelectedPage.CreateFunction($"{rep.title}", Color.white, null).SetTooltip(rep.ToString());
+            SelectedPage.CreateFunction($"{rep.title}", ColorPlus.GetNextColor(), null).SetTooltip(rep.ToString());
             switch (rep.type)
             {
                 case CrateType.Level:
-                    SelectedPage.CreateFunction("Load Level", OverrideColor.red, () => SceneStreamer.Load(new(rep.barcode)));
+                    SelectedPage.CreateFunction("Load Level", ColorPlus.GetNextColor(), () => SceneStreamer.Load(new(rep.barcode)));
                     DevUtils.Notify("Level Loaded");
                     break;
                 case CrateType.Avatar:
-                    SelectedPage.CreateFunction("Swap Avatar", OverrideColor.red, () => Player.RigManager.SwapAvatarCrate(new(rep.barcode)));
+                    SelectedPage.CreateFunction("Swap Avatar", ColorPlus.GetNextColor(), () => Player.RigManager.SwapAvatarCrate(new(rep.barcode)));
                     DevUtils.Notify("Avatar Swapped");
                     break;
                 case CrateType.Spawnable:
-                    SelectedPage.CreateFunction("Swap Spawn Gun Crate", OverrideColor.red, () => SwapSpawnGunCrate(rep.barcode));
+                    SelectedPage.CreateFunction("Swap Spawn Gun Crate", ColorPlus.GetNextColor(), () => SwapSpawnGunCrate(rep.barcode));
                     DevUtils.Notify("Spawn Gun Crate Swapped");
                     break;
             }
-            SelectedPage.CreateFunction("Load Crate Assets into Memory", OverrideColor.red, () =>
+            SelectedPage.CreateFunction("Load Crate Assets into Memory", ColorPlus.GetNextColor(), () =>
             {
                 if (!AssetWarehouse.Instance.TryGetCrate(new Barcode(rep.barcode), out Crate crate)) return;
                 crate.PreloadAssets();
                 DevUtils.Notify("Preloading Crate");
             });
-            SelectedPage.CreateFunction("Unlock Crate", OverrideColor.red, () =>
+            SelectedPage.CreateFunction("Unlock Crate", ColorPlus.GetNextColor(), () =>
             {
                 DataManager.ActiveSave.Unlocks.IncrementUnlockForBarcode(new Barcode(rep.barcode));
                 DataManager.TrySaveActiveSave(Il2CppSLZ.Marrow.SaveData.SaveFlags.DefaultAndPlayerSettingsAndUnlocks);
                 DevUtils.Notify("Crate Unlocked");
             });
-            SelectedPage.CreateFunction("Lock Crate", OverrideColor.red, () =>
+            SelectedPage.CreateFunction("Lock Crate",  ColorPlus.GetNextColor(), () =>
             {
                 DataManager.ActiveSave.Unlocks.ClearUnlockForBarcode(new Barcode(rep.barcode));
                 DataManager.TrySaveActiveSave(Il2CppSLZ.Marrow.SaveData.SaveFlags.DefaultAndPlayerSettingsAndUnlocks);
                 DevUtils.Notify("Crate Locked");
             });
-            SelectedPage.CreateFunction("Favorite Crate", OverrideColor.red, () =>
+            SelectedPage.CreateFunction("Favorite Crate",  ColorPlus.GetNextColor(), () =>
             {
                 var crates = FavoriteCrates.Value.ToList();
                 if(!crates.Contains(rep.barcode)) crates.Add(rep.barcode);
@@ -114,7 +114,7 @@ namespace LabUtils.Utils.AssetWarehouseUtil
                 DevUtils.Notify("Crate Favorited");
                 RefreshFavoritesPage();
             });
-            SelectedPage.CreateFunction("UnFavorite Crate", OverrideColor.red, () =>
+            SelectedPage.CreateFunction("UnFavorite Crate",  ColorPlus.GetNextColor(), () =>
             {
                 var crates = FavoriteCrates.Value.ToList();
                 if (crates.Contains(rep.barcode)) crates.Remove(rep.barcode);

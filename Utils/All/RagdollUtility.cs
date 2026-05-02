@@ -18,10 +18,10 @@ namespace LabUtils.Utils.All
 
         protected override void OnLoad()
         {
-            page = UICore.UtilitiesPage.CreatePage("Ragdoll Utility", OverrideColor.green, maxElements: 10);
-            page.CreateBool("Ragdoll On Death", Color.white, RagdollOnDeath.Value, (a) => RagdollOnDeath.Value = a);
-            page.CreateFunction("Ragdoll", Color.white, Ragdoll);
-            page.CreateFunction("Unragdoll", Color.white, UnRagdoll);
+            page = UICore.UtilitiesPage.CreatePage("Ragdoll Utility", ColorPlus.GetNextColor(), maxElements: 10);
+            page.CreateBool("Ragdoll On Death", ColorPlus.GetNextColor(), RagdollOnDeath.Value, (a) => RagdollOnDeath.Value = a);
+            page.CreateFunction("Ragdoll", ColorPlus.GetNextColor(), Ragdoll);
+            page.CreateFunction("Unragdoll", ColorPlus.GetNextColor(), UnRagdoll);
         }
 
         public static void Ragdoll()

@@ -21,6 +21,9 @@
 		<Reference Include="BoneLib">
 		  <HintPath>..\..\Meta Horizon\Software\Software\stress-level-zero-inc-bonelab\Mods\BoneLib.dll</HintPath>
 		</Reference>
+		<Reference Include="Facepunch.Steamworks.Win64">
+		  <HintPath>C:\Users\cheesy\Downloads\Facepunch.Steamworks.2.5.2\Release\net6.0\Facepunch.Steamworks.Win64.dll</HintPath>
+		</Reference>
 		<Reference Include="Il2CppGoogle.Protobuf">
 			<HintPath>$(GamePath)/MelonLoader\Il2CppAssemblies\Il2CppGoogle.Protobuf.dll</HintPath>
 		</Reference>
@@ -342,12 +345,6 @@
 		<Reference Include="UnityEngine.ClothModule">
 			<HintPath>$(GamePath)/MelonLoader\Il2CppAssemblies\UnityEngine.ClothModule.dll</HintPath>
 		</Reference>
-		<Reference Include="UnityEngine.ClusterInputModule">
-			<HintPath>$(GamePath)/MelonLoader\Il2CppAssemblies\UnityEngine.ClusterInputModule.dll</HintPath>
-		</Reference>
-		<Reference Include="UnityEngine.ClusterRendererModule">
-			<HintPath>$(GamePath)/MelonLoader\Il2CppAssemblies\UnityEngine.ClusterRendererModule.dll</HintPath>
-		</Reference>
 		<Reference Include="UnityEngine.CoreModule">
 			<HintPath>$(GamePath)/MelonLoader\Il2CppAssemblies\UnityEngine.CoreModule.dll</HintPath>
 		</Reference>
@@ -392,9 +389,6 @@
 		</Reference>
 		<Reference Include="UnityEngine.LocalizationModule">
 			<HintPath>$(GamePath)/MelonLoader\Il2CppAssemblies\UnityEngine.LocalizationModule.dll</HintPath>
-		</Reference>
-		<Reference Include="UnityEngine.NVIDIAModule">
-			<HintPath>$(GamePath)/MelonLoader\Il2CppAssemblies\UnityEngine.NVIDIAModule.dll</HintPath>
 		</Reference>
 		<Reference Include="UnityEngine.ParticleSystemModule">
 			<HintPath>$(GamePath)/MelonLoader\Il2CppAssemblies\UnityEngine.ParticleSystemModule.dll</HintPath>
@@ -516,9 +510,6 @@
 		<Reference Include="UnityEngine.VideoModule">
 			<HintPath>$(GamePath)/MelonLoader\Il2CppAssemblies\UnityEngine.VideoModule.dll</HintPath>
 		</Reference>
-		<Reference Include="UnityEngine.VirtualTexturingModule">
-			<HintPath>$(GamePath)/MelonLoader\Il2CppAssemblies\UnityEngine.VirtualTexturingModule.dll</HintPath>
-		</Reference>
 		<Reference Include="UnityEngine.VRModule">
 			<HintPath>$(GamePath)/MelonLoader\Il2CppAssemblies\UnityEngine.VRModule.dll</HintPath>
 		</Reference>
@@ -559,9 +550,11 @@
 		<Compile Include="Developer\Patches\PlayerPatches.cs" />
 		<Compile Include="Developer\UICore.cs" />
 		<Compile Include="Developer\Utility.cs" />
-		<Compile Include="OverrideColor.cs" />
+		<Compile Include="ColorPlus.cs" />
+		<Compile Include="Utils\AchivementUtility\AchivementUtility.cs" />
 		<Compile Include="Utils\All\Developer\DebugUtility.cs" />
 		<Compile Include="Utils\All\Developer\SceneUtility.cs" />
+		<Compile Include="Utils\All\FunUtility.cs" />
 		<Compile Include="Utils\All\HealthUtility.cs" />
 		<Compile Include="Utils\All\RagdollUtility.cs" />
 		<Compile Include="Utils\AssetWarehouseUtil\AssetWarehouseUtility.cs" />
